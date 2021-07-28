@@ -76,7 +76,7 @@
                     android:layout_marginStart="@dimen/margin_16dp"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/text_size_12sp"
-                    android:textStyle="bold"
+                    android:textStyle=""
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/settings"
                     app:layout_constraintTop_toTopOf="@id/logo"
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/margin_24dp"
                     android:paddingVertical="@dimen/margin_16dp"
-                    tools:text="Ultimo aggiornamento dati e regole: \nmeno di 4 ore"
+                    android:text="Ultimo aggiornamento dati e regole: \nmeno di 4 ore"
                     android:textColor="@color/blue_dark" />
 
             </androidx.cardview.widget.CardView>
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/margin_24dp"
                     android:paddingVertical="@dimen/margin_16dp"
-                    android:text="@string/label_read_faq"
+                    android:text="Come funziona l'app?\nQuale QR Code scansionare?\nQuali dati vengono letti?\n\nLeggi le domande frequenti"
                     android:textColor="@color/blue_dark" />
 
 
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_24dp"
                 android:layout_marginBottom="@dimen/margin_16dp"
-                android:background="@drawable/background_slightly_rounded_blue"
+                android:background="@drawable/background_rounded_blue"
                 android:drawableEnd="@drawable/ic_qr_code"
                 android:drawablePadding="@dimen/padding_10dp"
                 android:drawableTint="@color/white"
@@ -183,7 +183,6 @@
                 android:paddingEnd="@dimen/padding_20dp"
                 android:text="@string/label_scan_qr_code"
                 android:textAlignment="textStart"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"

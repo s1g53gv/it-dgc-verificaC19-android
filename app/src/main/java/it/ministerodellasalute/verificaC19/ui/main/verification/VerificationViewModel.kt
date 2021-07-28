@@ -93,7 +93,7 @@ class VerificationViewModel @Inject constructor(
                 val compressedCose = base45Service.decode(plainInput, verificationResult)
                 val cose = compressorService.decode(compressedCose, verificationResult)
 
-                val coseData = coseService.decode(cose, verificationResult)
+                val coseData = coseService.decode(cose!!, verificationResult)
                 if (coseData == null) {
                     Log.d(TAG, "Verification failed: COSE not decoded")
                     return@withContext

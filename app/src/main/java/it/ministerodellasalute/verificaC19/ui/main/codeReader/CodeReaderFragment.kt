@@ -40,7 +40,8 @@ import it.ministerodellasalute.verificaC19.R
 import it.ministerodellasalute.verificaC19.databinding.FragmentCodeReaderBinding
 import java.lang.Exception
 
-class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListener, View.OnClickListener {
+class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListener,
+    View.OnClickListener {
 
     private var _binding: FragmentCodeReaderBinding? = null
     private val binding get() = _binding!!
@@ -58,9 +59,10 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
 
             lastText = result.text
 
-            try{
+            try {
                 beepManager.playBeepSoundAndVibrate()
-            }catch (e: Exception){}
+            } catch (e: Exception) {
+            }
 
             navigateToVerificationPage(result.text)
         }
@@ -115,12 +117,16 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         findNavController().currentDestination
 
         val action = CodeReaderFragmentDirections.actionCodeReaderFragmentToVerificationFragment(
-                text
-            )
+            text
+        )
         findNavController().navigate(action)
     }
 
-    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
         if (destination.id == R.id.codeReaderFragment) {
             binding.barcodeScanner.resume()
             lastText = ""
@@ -128,7 +134,7 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.stop_button -> requireActivity().finish()
         }
     }

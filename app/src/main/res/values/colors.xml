@@ -31,6 +31,7 @@
     <color name="grey_100">#404040</color>
     <color name="grey_75">#707070</color>
     <color name="grey_50">#9F9F9F</color>
+    <color name="grey_light">#eeeeee</color>
 
     <color name="blue_light">#B7CCE6</color>
 
