@@ -93,7 +93,8 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
         binding.barcodeScanner.statusView.text = ""
         beepManager = BeepManager(requireActivity())
 
-        binding.stopButton.setOnClickListener(this)
+        binding.backImage.setOnClickListener(this)
+        binding.backText.setOnClickListener(this)
     }
 
     override fun onDestroyView() {
@@ -135,7 +136,8 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.stop_button -> requireActivity().finish()
+            R.id.back_image -> requireActivity().finish()
+            R.id.back_text -> requireActivity().finish()
         }
     }
 }

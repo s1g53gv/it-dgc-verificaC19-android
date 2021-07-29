@@ -27,7 +27,8 @@ data class CertificateModel(
     val dateOfBirth: String,
     val vaccinations: List<VaccinationModel>?,
     val tests: List<TestModel>?,
-    val recoveryStatements: List<RecoveryModel>?
+    val recoveryStatements: List<RecoveryModel>?,
+    val isValid: Boolean,
 )
 
 data class PersonModel(

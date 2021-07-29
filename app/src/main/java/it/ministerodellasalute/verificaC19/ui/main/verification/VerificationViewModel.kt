@@ -31,8 +31,6 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dgca.verifier.app.decoder.toBase64
 import it.ministerodellasalute.verificaC19.data.VerifierRepository
-import it.ministerodellasalute.verificaC19.model.CertificateModel
-import it.ministerodellasalute.verificaC19.model.toCertificateModel
 import dgca.verifier.app.decoder.base45.Base45Service
 import dgca.verifier.app.decoder.cbor.CborService
 import dgca.verifier.app.decoder.compression.CompressorService
@@ -42,14 +40,15 @@ import dgca.verifier.app.decoder.model.GreenCertificate
 import dgca.verifier.app.decoder.model.VerificationResult
 import dgca.verifier.app.decoder.prefixvalidation.PrefixValidationService
 import dgca.verifier.app.decoder.schema.SchemaValidator
-import dgca.verifier.app.decoder.toBase64
 import it.ministerodellasalute.verificaC19.data.local.Preferences
 import it.ministerodellasalute.verificaC19.data.remote.model.Rule
 import it.ministerodellasalute.verificaC19.di.DispatcherProvider
-import it.ministerodellasalute.verificaC19.model.ValidationRulesEnum
-import kotlinx.coroutines.Dispatchers
+import it.ministerodellasalute.verificaC19.model.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 private const val TAG = "VerificationViewModel"
@@ -67,9 +66,6 @@ class VerificationViewModel @Inject constructor(
     private val preferences: Preferences,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
-
-    private val _verificationResult = MutableLiveData<VerificationResult>()
-    val verificationResult: LiveData<VerificationResult> = _verificationResult
 
     private val _certificate = MutableLiveData<CertificateModel?>()
     val certificate: LiveData<CertificateModel?> = _certificate
@@ -120,8 +116,7 @@ class VerificationViewModel @Inject constructor(
             }
 
             _inProgress.value = false
-            _certificate.value = greenCertificate?.toCertificateModel()
-            _verificationResult.value = verificationResult
+            _certificate.value = greenCertificate?.toCertificateModel(verificationResult)
         }
     }
 
@@ -131,75 +126,180 @@ class VerificationViewModel @Inject constructor(
     }
 
     fun getRecoveryCertStartDay(): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_START_DAY.value }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_START_DAY.value }?.value
+            ?: run {
+                ""
+            }
     }
 
     fun getRecoveryCertEndDay(): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_END_DAY.value }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_END_DAY.value }?.value
+            ?: run {
+                ""
+            }
     }
 
     fun getRapidTestStartHour(): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_START_HOUR.value }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_START_HOUR.value }?.value
+            ?: run {
+                ""
+            }
     }
 
     fun getRapidTestEndHour(): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_END_HOUR.value }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_END_HOUR.value }?.value
+            ?: run {
+                ""
+            }
     }
 
-    fun getVaccineStartDayNotComplete(vaccinType: String): String {
+    fun getVaccineStartDayNotComplete(vaccineType: String): String {
 
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_NOT_COMPLETE.value && it.type == vaccinType }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_NOT_COMPLETE.value && it.type == vaccineType }?.value
+            ?: run {
+                ""
+            }
     }
 
-    fun getVaccineEndDayNotComplete(vaccinType: String): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_NOT_COMPLETE.value && it.type == vaccinType }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+    fun getVaccineEndDayNotComplete(vaccineType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_NOT_COMPLETE.value && it.type == vaccineType }?.value
+            ?: run {
+                ""
+            }
     }
 
-    fun getVaccineStartDayComplete(vaccinType: String): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_COMPLETE.value && it.type == vaccinType }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
-        }
+    fun getVaccineStartDayComplete(vaccineType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_COMPLETE.value && it.type == vaccineType }?.value
+            ?: run {
+                ""
+            }
     }
 
-    fun getVaccineEndDayComplete(vaccinType: String): String {
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_COMPLETE.value && it.type == vaccinType }
-            ?.let {
-                it.value
-            } ?: run {
-            ""
+    fun getVaccineEndDayComplete(vaccineType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_COMPLETE.value && it.type == vaccineType }?.value
+            ?: run {
+                ""
+            }
+    }
+
+    fun getCertificateStatus(it: CertificateModel): CertificateStatus {
+        if (!it.isValid) return CertificateStatus.NOT_VALID
+        it.recoveryStatements?.let {
+            try {
+                val startDate: LocalDate =
+                    LocalDate.parse(clearExtraTime(it.last().certificateValidFrom))
+
+                val endDate: LocalDate =
+                    LocalDate.parse(clearExtraTime(it.last().certificateValidUntil))
+
+                Log.d("dates", "start:$startDate end: $endDate")
+                return when {
+                    startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                    LocalDate.now()
+                        .isAfter(endDate) -> CertificateStatus.EXPIRED
+                    else -> CertificateStatus.VALID
+                }
+            } catch (e: Exception) {
+                return CertificateStatus.NOT_VALID
+            }
+            return CertificateStatus.EXPIRED
+        }
+        it.tests?.let {
+
+            if (it.last().resultType == TestResult.DETECTED) {
+                return CertificateStatus.NOT_VALID
+            }
+            try {
+                val odtDateTimeOfCollection = OffsetDateTime.parse(it.last().dateTimeOfCollection)
+                val ldtDateTimeOfCollection = odtDateTimeOfCollection.toLocalDateTime()
+
+                val startDate: LocalDateTime =
+                    ldtDateTimeOfCollection
+                        .plusHours(Integer.parseInt(getRapidTestStartHour()).toLong())
+
+                val endDate: LocalDateTime =
+                    ldtDateTimeOfCollection
+                        .plusHours(Integer.parseInt(getRapidTestEndHour()).toLong())
+                Log.d("dates", "start:$startDate end: $endDate")
+                return when {
+                    startDate.isAfter(LocalDateTime.now()) -> CertificateStatus.NOT_VALID_YET
+                    LocalDateTime.now()
+                        .isAfter(endDate) -> CertificateStatus.EXPIRED
+                    else -> CertificateStatus.VALID
+                }
+            } catch (e: Exception) {
+                return CertificateStatus.NOT_VALID
+            }
+            return CertificateStatus.EXPIRED
+        }
+
+        it.vaccinations?.let {
+            try {
+                when {
+                    it.last().doseNumber < it.last().totalSeriesOfDoses -> {
+                        val startDate: LocalDate =
+                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                                .plusDays(
+                                    Integer.parseInt(getVaccineStartDayNotComplete(it.last().medicinalProduct))
+                                        .toLong()
+                                )
+
+                        val endDate: LocalDate =
+                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                                .plusDays(
+                                    Integer.parseInt(getVaccineEndDayNotComplete(it.last().medicinalProduct))
+                                        .toLong()
+                                )
+                        Log.d("dates", "start:$startDate end: $endDate")
+                        return when {
+                            startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                            LocalDate.now()
+                                .isAfter(endDate) -> CertificateStatus.EXPIRED
+                            else -> CertificateStatus.VALID
+                        }
+                    }
+                    it.last().doseNumber == it.last().totalSeriesOfDoses -> {
+                        val startDate: LocalDate =
+                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                                .plusDays(
+                                    Integer.parseInt(getVaccineStartDayComplete(it.last().medicinalProduct))
+                                        .toLong()
+                                )
+
+                        val endDate: LocalDate =
+                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                                .plusDays(
+                                    Integer.parseInt(getVaccineEndDayComplete(it.last().medicinalProduct))
+                                        .toLong()
+                                )
+                        Log.d("dates", "start:$startDate end: $endDate")
+                        return when {
+                            startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                            LocalDate.now()
+                                .isAfter(endDate) -> CertificateStatus.EXPIRED
+                            else -> CertificateStatus.VALID
+                        }
+                    }
+                    it.last().doseNumber > it.last().totalSeriesOfDoses -> {
+                        return CertificateStatus.NOT_VALID
+                    }
+                    else -> CertificateStatus.NOT_VALID
+                }
+            } catch (e: Exception) {
+                return CertificateStatus.NOT_VALID
+            }
+        }
+        return CertificateStatus.EXPIRED
+    }
+
+    private fun clearExtraTime(strDateTime: String): String {
+        try {
+            if (strDateTime.contains("T")) {
+                return strDateTime.substring(0, strDateTime.indexOf("T"))
+            }
+            return strDateTime
+        } catch (e: Exception) {
+            return strDateTime
         }
     }
 }
