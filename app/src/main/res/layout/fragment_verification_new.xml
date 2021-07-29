@@ -45,35 +45,16 @@
                 android:layout_height="match_parent"
                 android:paddingVertical="@dimen/padding_16dp">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <ImageButton
                     android:id="@+id/close_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
+                    android:layout_width="@dimen/size_35dp"
+                    android:layout_height="@dimen/size_35dp"
+                    android:background="@drawable/circular"
                     android:padding="@dimen/padding_10dp"
+                    android:src="@drawable/ic_close"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
-
-                    <TextView
-                        android:id="@+id/close_text"
-                        style="@style/H3.Black.Bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/titiliumfont"
-                        android:text="@string/label_close"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_dark"
-                        android:textSize="@dimen/text_size_12sp" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_arrow_up"
-                        app:tint="@color/blue_dark" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageButton
                     android:id="@+id/checkmark"

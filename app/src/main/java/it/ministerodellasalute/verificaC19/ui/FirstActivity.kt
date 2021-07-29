@@ -108,7 +108,6 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         // TODO: 28/07/21 PrivacyPolicy
-
 //        binding.privacyPolicy.setOnClickListener {
 //            val browserIntent =
 //                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))

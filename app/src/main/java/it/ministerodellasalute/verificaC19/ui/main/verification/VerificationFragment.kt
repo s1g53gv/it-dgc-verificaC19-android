@@ -30,7 +30,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dgca.verifier.app.decoder.model.VerificationResult
@@ -69,7 +68,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.closeButton.setOnClickListener(this)
-        binding.nextQrButton.setOnClickListener(this)
+//        binding.nextQrButton.setOnClickListener(this)
 
         viewModel.verificationResult.observe(viewLifecycleOwner) {
             setCertStatusUI(it)
@@ -111,7 +110,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 val endDate: LocalDate =
                     LocalDate.parse(clearExtraTime(it.last().certificateValidUntil))
 
-                Log.d("dates", "start:" + startDate.toString() + " end: " + endDate.toString())
+                Log.d("dates", "start:$startDate end: $endDate")
                 return when {
                     startDate.isAfter(LocalDate.now()) -> TestExpiryValues.FUTURE
                     LocalDate.now().isAfter(endDate) -> TestExpiryValues.EXPIRED
@@ -139,7 +138,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 val endDate: LocalDateTime =
                     ldtDateTimeOfCollection
                         .plusHours(Integer.parseInt(viewModel.getRapidTestEndHour()).toLong())
-                Log.d("dates", "start:" + startDate.toString() + " end: " + endDate.toString())
+                Log.d("dates", "start:$startDate end: $endDate")
                 return when {
                     startDate.isAfter(LocalDateTime.now()) -> TestExpiryValues.FUTURE
                     LocalDateTime.now().isAfter(endDate) -> TestExpiryValues.EXPIRED
@@ -188,7 +187,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                                 Integer.parseInt(viewModel.getVaccineEndDayComplete(it.last().medicinalProduct))
                                     .toLong()
                             )
-                    Log.d("dates", "start:" + startDate.toString() + " end: " + endDate.toString())
+                    Log.d("dates", "start:$startDate end: $endDate")
                     return when {
                         startDate.isAfter(LocalDate.now()) -> TestExpiryValues.FUTURE
                         LocalDate.now().isAfter(endDate) -> TestExpiryValues.EXPIRED
@@ -215,12 +214,18 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         if (verificationResult.isValid()) {
             val certificateValidityResult = isAnyTestExpired(certificateModel)
             if (certificateValidityResult == TestExpiryValues.VALID) {
+                binding.verificationBackground.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green
+                    )
+                )
                 binding.containerPersonDetails.visibility = View.VISIBLE
                 binding.checkmark.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkmark_filled)
                 binding.certificateValid.text = getString(R.string.certificateValid)
                 binding.subtitleText.text = getString(R.string.subtitle_text)
-                binding.nextQrButton.text = getString(R.string.nextQR)
+//                binding.nextQrButton.text = getString(R.string.nextQR)
             } else {
                 setTestErrorMessage(certificateValidityResult)
             }
@@ -230,6 +235,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_misuse)
             binding.certificateValid.text = getString(R.string.certificateNonValid)
             binding.subtitleText.text = getString(R.string.subtitle_text_nonvalid)
+            binding.verificationBackground.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            )
         }
     }
 
@@ -237,6 +248,12 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.containerPersonDetails.visibility = View.VISIBLE
         binding.checkmark.background =
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_misuse)
+        binding.verificationBackground.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.red
+            )
+        )
         binding.certificateValid.text = getString(R.string.certificateNonValid)
         binding.subtitleText.text =
             when (certificateValidityResult) {
@@ -248,8 +265,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setPersonData(person: PersonModel, dateOfBirth: String) {
-        binding.nameText.text = person.familyName.plus(" ").plus(person.givenName)
-        binding.nameStandardisedText.text = ""
+        binding.nameStandardisedText.text = person.familyName.plus(" ").plus(person.givenName)
         binding.birthdateText.text =
             dateOfBirth.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE)
     }
@@ -257,7 +273,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.close_button -> requireActivity().finish()
-            R.id.next_qr_button -> findNavController().popBackStack()
+//            R.id.next_qr_button -> findNavController().popBackStack()
         }
     }
 

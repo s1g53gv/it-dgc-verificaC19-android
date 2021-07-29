@@ -34,7 +34,7 @@
     <string name="expirationText">Data scadenza certificato</string>
     <string name="certificateValid">Certificazione valida</string>
     <string name="certificateNonValid">Certificazione non valida</string>
-    <string name="subtitle_text">Per completare la verifica è necessario confrontare i dati anagrafici qui sotto riportati con quelli di un valido documento d\'identità (es. Carta d\'identità).</string>
+    <string name="subtitle_text">Per completare la verifica è necessario confrontare i seguenti dati anagrafici con quelli di un documento d\'identità valido:</string>
     <string name="subtitle_text_nonvalid">Il QR Code o la chiave di firma non sono validi.</string>
     <string name="subtitle_text_expired">La Certificazione è scaduta.</string>
     <string name="subtitle_text_future">La Certificazione non è ancora valida.</string>
@@ -43,7 +43,7 @@
     <string name="scanQr">Avvia scansione </string>
     <string name="nextQR">Prossima scansione</string>
     <string name="repeatQR">Ripeti scansione</string>
-    <string name="dateOfBirth">Data di nascita</string>
+    <string name="dateOfBirth">Data di nascita/Birth date</string>
     <string name="lastSyncDate">Ultimo aggiornamento dati e regole:\n%1$s</string>
     <string name="loading">Caricamento certificati in corso</string>
     <string name="notAvailable">N/A</string>
@@ -62,4 +62,7 @@
     <string name="label_verify_green_pass">Verifica una\n<b>Certificazione\nverde Covid-19</b></string>
     <string name="label_scan_qr_code">Scansiona il QR CODE</string>
     <string name="label_read_faq">Come funziona l\'app?\nQuale QR Code scansionare?\nQuali dati vengono letti?\n\n<u><b>Leggi le domande frequenti</b></u></string>
+    <string name="label_verification_location"><b><u>Quali sono i luoghi e gli eventi che la prevedono?</u></b></string>
+    <string name="label_name">Nome/Name</string>
+    <string name="label_close">Chiudi</string>
 </resources>

@@ -125,72 +125,80 @@ class VerificationViewModel @Inject constructor(
         }
     }
 
-    private fun getValidationRules():Array<Rule>{
+    private fun getValidationRules(): Array<Rule> {
         val jsonString = preferences.validationRulesJson
         return Gson().fromJson(jsonString, Array<Rule>::class.java)
     }
 
-    fun getRecoveryCertStartDay(): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_START_DAY.value}?.let {
-            it.value
-        } ?: run {
+    fun getRecoveryCertStartDay(): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_START_DAY.value }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getRecoveryCertEndDay(): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_END_DAY.value}?.let {
-            it.value
-        } ?: run {
+    fun getRecoveryCertEndDay(): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.RECOVERY_CERT_END_DAY.value }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getRapidTestStartHour(): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_START_HOUR.value}?.let {
-            it.value
-        } ?: run {
+    fun getRapidTestStartHour(): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_START_HOUR.value }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getRapidTestEndHour(): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_END_HOUR.value}?.let {
-            it.value
-        } ?: run {
+    fun getRapidTestEndHour(): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.RAPID_TEST_END_HOUR.value }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getVaccineStartDayNotComplete(vaccinType: String): String{
+    fun getVaccineStartDayNotComplete(vaccinType: String): String {
 
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_NOT_COMPLETE.value && it.type == vaccinType }?.let {
-            it.value
-        } ?: run {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_NOT_COMPLETE.value && it.type == vaccinType }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getVaccineEndDayNotComplete(vaccinType: String): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_NOT_COMPLETE.value && it.type == vaccinType }?.let {
-            it.value
-        } ?: run {
+    fun getVaccineEndDayNotComplete(vaccinType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_NOT_COMPLETE.value && it.type == vaccinType }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getVaccineStartDayComplete(vaccinType: String): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_COMPLETE.value && it.type == vaccinType }?.let {
-            it.value
-        } ?: run {
+    fun getVaccineStartDayComplete(vaccinType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_COMPLETE.value && it.type == vaccinType }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
 
-    fun getVaccineEndDayComplete(vaccinType: String): String{
-        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_COMPLETE.value && it.type == vaccinType}?.let {
-            it.value
-        } ?: run {
+    fun getVaccineEndDayComplete(vaccinType: String): String {
+        return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_END_DAY_COMPLETE.value && it.type == vaccinType }
+            ?.let {
+                it.value
+            } ?: run {
             ""
         }
     }
