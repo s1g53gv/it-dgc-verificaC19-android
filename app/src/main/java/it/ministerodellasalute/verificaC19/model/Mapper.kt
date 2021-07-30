@@ -31,7 +31,8 @@ fun GreenCertificate.toCertificateModel(verificationResult: VerificationResult):
         vaccinations?.map { it.toVaccinationModel() },
         tests?.map { it.toTestModel() },
         recoveryStatements?.map { it.toRecoveryModel() },
-        verificationResult.isValid()
+        verificationResult.isValid(),
+        verificationResult.cborDecoded
     )
 }
 

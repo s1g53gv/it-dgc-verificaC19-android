@@ -107,12 +107,16 @@ class FirstActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-        // TODO: 28/07/21 PrivacyPolicy
-//        binding.privacyPolicy.setOnClickListener {
-//            val browserIntent =
-//                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
-//            startActivity(browserIntent)
-//        }
+        binding.privacyPolicyCard.setOnClickListener {
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/pn.html"))
+            startActivity(browserIntent)
+        }
+        binding.faqCard.setOnClickListener {
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dgc.gov.it/web/faq.html"))
+            startActivity(browserIntent)
+        }
     }
 
     private fun checkCameraPermission() {

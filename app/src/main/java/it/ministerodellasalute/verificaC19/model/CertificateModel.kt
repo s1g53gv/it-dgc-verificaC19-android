@@ -29,6 +29,7 @@ data class CertificateModel(
     val tests: List<TestModel>?,
     val recoveryStatements: List<RecoveryModel>?,
     val isValid: Boolean,
+    val isCborDecoded: Boolean
 )
 
 data class PersonModel(

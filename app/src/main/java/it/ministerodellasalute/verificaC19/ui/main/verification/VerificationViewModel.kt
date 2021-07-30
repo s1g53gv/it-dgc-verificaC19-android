@@ -183,7 +183,12 @@ class VerificationViewModel @Inject constructor(
     }
 
     fun getCertificateStatus(it: CertificateModel): CertificateStatus {
-        if (!it.isValid) return CertificateStatus.NOT_VALID
+        if (!it.isValid) {
+            return if (it.isCborDecoded) {
+                CertificateStatus.NOT_VALID
+            } else
+                CertificateStatus.TECHNICAL_ERROR
+        }
         it.recoveryStatements?.let {
             try {
                 val startDate: LocalDate =

@@ -54,7 +54,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/logo_splash" />
+                    app:srcCompat="@drawable/ic_logo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/title"
@@ -122,10 +122,11 @@
                     android:id="@+id/date_last_sync_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/titiliumfont"
                     android:paddingHorizontal="@dimen/margin_24dp"
                     android:paddingVertical="@dimen/margin_16dp"
-                    tools:text="Ultimo aggiornamento dati e regole: \nmeno di 4 ore"
-                    android:textColor="@color/blue_dark" />
+                    android:textColor="@color/blue_dark"
+                    tools:text="Ultimo aggiornamento dati e regole: \nmeno di 4 ore" />
 
             </androidx.cardview.widget.CardView>
 
@@ -146,10 +147,38 @@
                     android:id="@+id/faq_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/titiliumfont"
                     android:paddingHorizontal="@dimen/margin_24dp"
                     android:paddingVertical="@dimen/margin_16dp"
                     android:text="@string/label_read_faq"
                     android:textColor="@color/blue_dark" />
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/privacy_policy_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_16dp"
+                android:layout_marginTop="@dimen/margin_16dp"
+                android:background="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="@dimen/size_8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/faq_card">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/privacy_policy_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/titiliumfont"
+                    android:paddingHorizontal="@dimen/margin_24dp"
+                    android:paddingVertical="@dimen/margin_16dp"
+                    android:text="@string/privacyPolicy"
+                    android:textColor="@color/blue_dark"
+                    android:textStyle="bold" />
 
 
             </androidx.cardview.widget.CardView>
@@ -160,13 +189,17 @@
                 style="@style/H1.Regular"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/titiliumfont"
                 android:paddingHorizontal="@dimen/margin_24dp"
                 android:paddingVertical="@dimen/margin_16dp"
                 android:text="@string/label_verify_green_pass"
                 android:textColor="@color/blue_dark"
                 app:layout_constraintBottom_toTopOf="@id/qrButton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/faq_card"
+                app:layout_constraintVertical_bias="1.0" />
 
             <Button
                 android:id="@+id/qrButton"
@@ -183,9 +216,9 @@
                 android:paddingEnd="@dimen/padding_20dp"
                 android:text="@string/label_scan_qr_code"
                 android:textAlignment="textStart"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="15sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

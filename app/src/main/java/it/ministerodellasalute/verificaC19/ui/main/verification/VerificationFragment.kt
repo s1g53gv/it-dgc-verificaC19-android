@@ -31,14 +31,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import it.ministerodellasalute.verificaC19.FORMATTED_BIRTHDAY_DATE
-import it.ministerodellasalute.verificaC19.R
-import it.ministerodellasalute.verificaC19.YEAR_MONTH_DAY
+import it.ministerodellasalute.verificaC19.*
 import it.ministerodellasalute.verificaC19.databinding.FragmentVerificationBinding
 import it.ministerodellasalute.verificaC19.model.CertificateModel
 import it.ministerodellasalute.verificaC19.model.CertificateStatus
 import it.ministerodellasalute.verificaC19.model.PersonModel
-import it.ministerodellasalute.verificaC19.parseFromTo
+import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
+import java.util.*
 
 @ExperimentalUnsignedTypes
 @AndroidEntryPoint
@@ -62,7 +61,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.closeButton.setOnClickListener(this)
-
+        binding.validationDate.text = getString(
+            R.string.label_validation_timestamp, Date().time.parseTo(
+                FORMATTED_VALIDATION_DATE
+            )
+        )
         viewModel.certificate.observe(viewLifecycleOwner) { certificate ->
             certificate?.let {
                 certificateModel = it
@@ -83,6 +86,26 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         setValidationIcon(certStatus)
         setValidationMainText(certStatus)
         setValidationSubText(certStatus)
+        setLinkViews(certStatus)
+    }
+
+    private fun setLinkViews(certStatus: CertificateStatus) {
+        val questionMap: Map<String, String> = when (certStatus) {
+            CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "http://www.google.com")
+            CertificateStatus.EXPIRED -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
+            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "http://www.google.com")
+            CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_VALID -> mapOf(
+                getString(R.string.label_which_qr_scan) to "http://www.google.com",
+                getString(R.string.label_scan_error_meaning) to "http://www.google.com",
+                getString(R.string.label_scan_times_needed) to "http://www.google.com",
+            )
+        }
+        questionMap.map {
+            val compound = QuestionCompound(context)
+            compound.setupWithLabels(it.key, it.value)
+            binding.questionContainer.addView(compound)
+        }
+        binding.questionContainer.clipChildren = false
     }
 
     private fun setValidationSubText(certStatus: CertificateStatus) {

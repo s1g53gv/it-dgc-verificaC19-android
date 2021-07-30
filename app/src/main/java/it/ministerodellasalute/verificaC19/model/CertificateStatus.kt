@@ -17,7 +17,6 @@
  *  limitations under the License.
  *  ---license-end
  *
- *  Created by it59980 on 29/07/21, 14:05
  */
 
 package it.ministerodellasalute.verificaC19.model
