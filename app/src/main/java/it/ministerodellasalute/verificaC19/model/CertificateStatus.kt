@@ -23,9 +23,9 @@ package it.ministerodellasalute.verificaC19.model
 
 enum class CertificateStatus {
     NOT_VALID,
-    EXPIRED,
     NOT_VALID_YET,
     VALID,
     PARTIALLY_VALID,
-    TECHNICAL_ERROR;
+    TECHNICAL_ERROR,
+    NOT_GREEN_PASS;
 }

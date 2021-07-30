@@ -154,7 +154,6 @@ class VerificationViewModel @Inject constructor(
     }
 
     fun getVaccineStartDayNotComplete(vaccineType: String): String {
-
         return getValidationRules().find { it.name == ValidationRulesEnum.VACCINE_START_DAY_NOT_COMPLETE.value && it.type == vaccineType }?.value
             ?: run {
                 ""
@@ -182,119 +181,131 @@ class VerificationViewModel @Inject constructor(
             }
     }
 
-    fun getCertificateStatus(it: CertificateModel): CertificateStatus {
-        if (!it.isValid) {
-            return if (it.isCborDecoded) {
+    fun getCertificateStatus(cert: CertificateModel): CertificateStatus {
+        if (!cert.isValid) {
+            return if (cert.isCborDecoded) {
                 CertificateStatus.NOT_VALID
             } else
-                CertificateStatus.TECHNICAL_ERROR
+                CertificateStatus.NOT_GREEN_PASS;
         }
-        it.recoveryStatements?.let {
-            try {
-                val startDate: LocalDate =
-                    LocalDate.parse(clearExtraTime(it.last().certificateValidFrom))
-
-                val endDate: LocalDate =
-                    LocalDate.parse(clearExtraTime(it.last().certificateValidUntil))
-
-                Log.d("dates", "start:$startDate end: $endDate")
-                return when {
-                    startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
-                    LocalDate.now()
-                        .isAfter(endDate) -> CertificateStatus.EXPIRED
-                    else -> CertificateStatus.VALID
-                }
-            } catch (e: Exception) {
-                return CertificateStatus.NOT_VALID
-            }
-            return CertificateStatus.EXPIRED
+        cert.recoveryStatements?.let {
+            return checkRecoveryStatements(it)
         }
-        it.tests?.let {
-
-            if (it.last().resultType == TestResult.DETECTED) {
-                return CertificateStatus.NOT_VALID
-            }
-            try {
-                val odtDateTimeOfCollection = OffsetDateTime.parse(it.last().dateTimeOfCollection)
-                val ldtDateTimeOfCollection = odtDateTimeOfCollection.toLocalDateTime()
-
-                val startDate: LocalDateTime =
-                    ldtDateTimeOfCollection
-                        .plusHours(Integer.parseInt(getRapidTestStartHour()).toLong())
-
-                val endDate: LocalDateTime =
-                    ldtDateTimeOfCollection
-                        .plusHours(Integer.parseInt(getRapidTestEndHour()).toLong())
-                Log.d("dates", "start:$startDate end: $endDate")
-                return when {
-                    startDate.isAfter(LocalDateTime.now()) -> CertificateStatus.NOT_VALID_YET
-                    LocalDateTime.now()
-                        .isAfter(endDate) -> CertificateStatus.EXPIRED
-                    else -> CertificateStatus.VALID
-                }
-            } catch (e: Exception) {
-                return CertificateStatus.NOT_VALID
-            }
-            return CertificateStatus.EXPIRED
+        cert.tests?.let {
+            return checkTests(it)
         }
+        cert.vaccinations?.let {
+            return checkVaccinations(it)
+        }
+        return CertificateStatus.NOT_VALID
+    }
 
-        it.vaccinations?.let {
-            try {
-                when {
-                    it.last().doseNumber < it.last().totalSeriesOfDoses -> {
-                        val startDate: LocalDate =
-                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
-                                .plusDays(
-                                    Integer.parseInt(getVaccineStartDayNotComplete(it.last().medicinalProduct))
-                                        .toLong()
-                                )
+    private fun checkVaccinations(it: List<VaccinationModel>?): CertificateStatus {
+        val vaccineEndDayComplete = getVaccineEndDayComplete(it!!.last().medicinalProduct)
+        val isValid = vaccineEndDayComplete.isNotEmpty()
+        if (!isValid) return CertificateStatus.NOT_VALID
+        try {
+            when {
+                it.last().doseNumber < it.last().totalSeriesOfDoses -> {
+                    val startDate: LocalDate =
+                        LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                            .plusDays(
+                                Integer.parseInt(getVaccineStartDayNotComplete(it.last().medicinalProduct))
+                                    .toLong()
+                            )
 
-                        val endDate: LocalDate =
-                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
-                                .plusDays(
-                                    Integer.parseInt(getVaccineEndDayNotComplete(it.last().medicinalProduct))
-                                        .toLong()
-                                )
-                        Log.d("dates", "start:$startDate end: $endDate")
-                        return when {
-                            startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
-                            LocalDate.now()
-                                .isAfter(endDate) -> CertificateStatus.EXPIRED
-                            else -> CertificateStatus.VALID
-                        }
+                    val endDate: LocalDate =
+                        LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                            .plusDays(
+                                Integer.parseInt(getVaccineEndDayNotComplete(it.last().medicinalProduct))
+                                    .toLong()
+                            )
+                    Log.d("dates", "start:$startDate end: $endDate")
+                    return when {
+                        startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                        LocalDate.now()
+                            .isAfter(endDate) -> CertificateStatus.NOT_VALID
+                        else -> CertificateStatus.PARTIALLY_VALID
                     }
-                    it.last().doseNumber == it.last().totalSeriesOfDoses -> {
-                        val startDate: LocalDate =
-                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
-                                .plusDays(
-                                    Integer.parseInt(getVaccineStartDayComplete(it.last().medicinalProduct))
-                                        .toLong()
-                                )
-
-                        val endDate: LocalDate =
-                            LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
-                                .plusDays(
-                                    Integer.parseInt(getVaccineEndDayComplete(it.last().medicinalProduct))
-                                        .toLong()
-                                )
-                        Log.d("dates", "start:$startDate end: $endDate")
-                        return when {
-                            startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
-                            LocalDate.now()
-                                .isAfter(endDate) -> CertificateStatus.EXPIRED
-                            else -> CertificateStatus.VALID
-                        }
-                    }
-                    it.last().doseNumber > it.last().totalSeriesOfDoses -> {
-                        return CertificateStatus.NOT_VALID
-                    }
-                    else -> CertificateStatus.NOT_VALID
                 }
-            } catch (e: Exception) {
-                return CertificateStatus.NOT_VALID
+                it.last().doseNumber == it.last().totalSeriesOfDoses -> {
+                    val startDate: LocalDate =
+                        LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                            .plusDays(
+                                Integer.parseInt(getVaccineStartDayComplete(it.last().medicinalProduct))
+                                    .toLong()
+                            )
+
+                    val endDate: LocalDate =
+                        LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
+                            .plusDays(
+                                Integer.parseInt(getVaccineEndDayComplete(it.last().medicinalProduct))
+                                    .toLong()
+                            )
+                    Log.d("dates", "start:$startDate end: $endDate")
+                    return when {
+                        startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                        LocalDate.now()
+                            .isAfter(endDate) -> CertificateStatus.NOT_VALID
+                        else -> CertificateStatus.VALID
+                    }
+                }
+                it.last().doseNumber > it.last().totalSeriesOfDoses -> {
+                    return CertificateStatus.NOT_VALID
+                }
+                else -> CertificateStatus.NOT_VALID
             }
+        } catch (e: Exception) {
+            return CertificateStatus.NOT_VALID
         }
-        return CertificateStatus.EXPIRED
+        return CertificateStatus.NOT_VALID
+    }
+
+    private fun checkTests(it: List<TestModel>?): CertificateStatus {
+        if (it!!.last().resultType == TestResult.DETECTED) {
+            return CertificateStatus.NOT_VALID
+        }
+        try {
+            val odtDateTimeOfCollection = OffsetDateTime.parse(it.last().dateTimeOfCollection)
+            val ldtDateTimeOfCollection = odtDateTimeOfCollection.toLocalDateTime()
+
+            val startDate: LocalDateTime =
+                ldtDateTimeOfCollection
+                    .plusHours(Integer.parseInt(getRapidTestStartHour()).toLong())
+
+            val endDate: LocalDateTime =
+                ldtDateTimeOfCollection
+                    .plusHours(Integer.parseInt(getRapidTestEndHour()).toLong())
+            Log.d("dates", "start:$startDate end: $endDate")
+            return when {
+                startDate.isAfter(LocalDateTime.now()) -> CertificateStatus.NOT_VALID_YET
+                LocalDateTime.now()
+                    .isAfter(endDate) -> CertificateStatus.NOT_VALID
+                else -> CertificateStatus.VALID
+            }
+        } catch (e: Exception) {
+            return CertificateStatus.NOT_VALID
+        }
+    }
+
+    private fun checkRecoveryStatements(it: List<RecoveryModel>): CertificateStatus {
+        try {
+            val startDate: LocalDate =
+                LocalDate.parse(clearExtraTime(it.last().certificateValidFrom))
+
+            val endDate: LocalDate =
+                LocalDate.parse(clearExtraTime(it.last().certificateValidUntil))
+
+            Log.d("dates", "start:$startDate end: $endDate")
+            return when {
+                startDate.isAfter(LocalDate.now()) -> CertificateStatus.NOT_VALID_YET
+                LocalDate.now()
+                    .isAfter(endDate) -> CertificateStatus.NOT_VALID
+                else -> CertificateStatus.VALID
+            }
+        } catch (e: Exception) {
+            return CertificateStatus.NOT_VALID
+        }
     }
 
     private fun clearExtraTime(strDateTime: String): String {

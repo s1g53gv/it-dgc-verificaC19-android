@@ -72,6 +72,6 @@
     <string name="label_when_qr_valid">Quali sono i tempi di inizio validità?</string>
     <string name="label_which_qr_scan">Quale QR Code scansionare?</string>
     <string name="label_scan_error_meaning">Cosa significa errore di lettura?</string>
-    <string name="label_scan_times_needed">Quante volte devo riproare a scansionare</string>
+    <string name="label_scan_times_needed">Quante volte devo riprovare a scansionare</string>
     <string name="label_validation_timestamp">Ora e data di validazione: %1$s</string>
 </resources>

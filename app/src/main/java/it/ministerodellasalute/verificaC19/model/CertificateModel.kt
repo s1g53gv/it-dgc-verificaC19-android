@@ -22,6 +22,8 @@
 
 package it.ministerodellasalute.verificaC19.model
 
+import java.lang.reflect.Constructor
+
 data class CertificateModel(
     val person: PersonModel,
     val dateOfBirth: String,

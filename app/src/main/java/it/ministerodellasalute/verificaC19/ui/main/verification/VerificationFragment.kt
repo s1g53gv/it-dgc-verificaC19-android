@@ -37,6 +37,7 @@ import it.ministerodellasalute.verificaC19.model.CertificateModel
 import it.ministerodellasalute.verificaC19.model.CertificateStatus
 import it.ministerodellasalute.verificaC19.model.PersonModel
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
+import java.security.cert.Certificate
 import java.util.*
 
 @ExperimentalUnsignedTypes
@@ -92,9 +93,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setLinkViews(certStatus: CertificateStatus) {
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "http://www.google.com")
-            CertificateStatus.EXPIRED -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "http://www.google.com")
-            CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_VALID -> mapOf(
+            CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_VALID, CertificateStatus.NOT_GREEN_PASS -> mapOf(
                 getString(R.string.label_which_qr_scan) to "http://www.google.com",
                 getString(R.string.label_scan_error_meaning) to "http://www.google.com",
                 getString(R.string.label_scan_times_needed) to "http://www.google.com",
@@ -111,9 +111,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
     private fun setValidationSubText(certStatus: CertificateStatus) {
         binding.subtitleText.text =
             when (certStatus) {
-                CertificateStatus.VALID -> getString(R.string.subtitle_text)
+                CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
                 CertificateStatus.NOT_VALID -> getString(R.string.subtitle_text_technicalError)
-                CertificateStatus.EXPIRED -> getString(R.string.subtitle_text_expired)
                 CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_future)
                 else -> getString(R.string.subtitle_text_technicalError)
             }
@@ -132,8 +131,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.checkmark.background =
             ContextCompat.getDrawable(
                 requireContext(), when (certStatus) {
-                    CertificateStatus.VALID -> R.drawable.ic_checkmark_filled
-                    else -> R.drawable.ic_misuse
+                    CertificateStatus.VALID -> R.drawable.ic_valid_cert
+                    CertificateStatus.NOT_VALID_YET -> R.drawable.ic_not_valid_yet
+                    CertificateStatus.PARTIALLY_VALID -> R.drawable.ic_locally_valid
+                    CertificateStatus.TECHNICAL_ERROR -> R.drawable.ic_technical_error
+                    else -> R.drawable.ic_invalid
                 }
             )
     }
@@ -151,6 +153,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 requireContext(),
                 when (certStatus) {
                     CertificateStatus.VALID -> R.color.green
+                    CertificateStatus.PARTIALLY_VALID -> R.color.blue_dark
                     else -> R.color.red
                 }
             )
