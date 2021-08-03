@@ -29,6 +29,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import it.ministerodellasalute.verificaC19.*
@@ -168,7 +169,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.close_button -> requireActivity().finish()
+            R.id.close_button -> findNavController().popBackStack()
         }
     }
 
