@@ -25,8 +25,8 @@ package it.ministerodellasalute.verificaC19.model
 import java.lang.reflect.Constructor
 
 data class CertificateModel(
-    val person: PersonModel,
-    val dateOfBirth: String,
+    val person: PersonModel?,
+    val dateOfBirth: String?,
     val vaccinations: List<VaccinationModel>?,
     val tests: List<TestModel>?,
     val recoveryStatements: List<RecoveryModel>?,

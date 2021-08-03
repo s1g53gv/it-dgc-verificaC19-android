@@ -38,7 +38,6 @@ import it.ministerodellasalute.verificaC19.model.CertificateModel
 import it.ministerodellasalute.verificaC19.model.CertificateStatus
 import it.ministerodellasalute.verificaC19.model.PersonModel
 import it.ministerodellasalute.verificaC19.ui.compounds.QuestionCompound
-import java.security.cert.Certificate
 import java.util.*
 
 @ExperimentalUnsignedTypes
@@ -87,6 +86,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         setPersonDetailsVisibility(certStatus)
         setValidationIcon(certStatus)
         setValidationMainText(certStatus)
+        setValidationSubTextVisibility(certStatus)
         setValidationSubText(certStatus)
         setLinkViews(certStatus)
     }
@@ -109,6 +109,13 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.questionContainer.clipChildren = false
     }
 
+    private fun setValidationSubTextVisibility(certStatus: CertificateStatus) {
+        binding.subtitleText.visibility = when (certStatus) {
+            CertificateStatus.NOT_GREEN_PASS -> View.GONE
+            else -> View.VISIBLE
+        }
+    }
+
     private fun setValidationSubText(certStatus: CertificateStatus) {
         binding.subtitleText.text =
             when (certStatus) {
@@ -123,6 +130,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.certificateValid.text = when (certStatus) {
             CertificateStatus.VALID -> getString(R.string.certificateValid)
             CertificateStatus.PARTIALLY_VALID -> getString(R.string.certificatePartiallyValid)
+            CertificateStatus.NOT_GREEN_PASS -> getString(R.string.certificateNotDCC)
             else -> getString(R.string.certificateNonValid)
 
         }
@@ -135,7 +143,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     CertificateStatus.VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_VALID_YET -> R.drawable.ic_not_valid_yet
                     CertificateStatus.PARTIALLY_VALID -> R.drawable.ic_locally_valid
-                    CertificateStatus.TECHNICAL_ERROR -> R.drawable.ic_technical_error
+                    CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_GREEN_PASS -> R.drawable.ic_technical_error
                     else -> R.drawable.ic_invalid
                 }
             )
@@ -161,10 +169,10 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         )
     }
 
-    private fun setPersonData(person: PersonModel, dateOfBirth: String) {
-        binding.nameStandardisedText.text = person.familyName.plus(" ").plus(person.givenName)
+    private fun setPersonData(person: PersonModel?, dateOfBirth: String?) {
+        binding.nameStandardisedText.text = person?.familyName.plus(" ").plus(person?.givenName)
         binding.birthdateText.text =
-            dateOfBirth.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE)
+            dateOfBirth?.parseFromTo(YEAR_MONTH_DAY, FORMATTED_BIRTHDAY_DATE) ?: ""
     }
 
     override fun onClick(v: View?) {

@@ -24,13 +24,13 @@ package it.ministerodellasalute.verificaC19.model
 
 import dgca.verifier.app.decoder.model.*
 
-fun GreenCertificate.toCertificateModel(verificationResult: VerificationResult): CertificateModel {
+fun GreenCertificate?.toCertificateModel(verificationResult: VerificationResult): CertificateModel {
     return CertificateModel(
-        person.toPersonModel(),
-        dateOfBirth,
-        vaccinations?.map { it.toVaccinationModel() },
-        tests?.map { it.toTestModel() },
-        recoveryStatements?.map { it.toRecoveryModel() },
+        this?.person?.toPersonModel(),
+        this?.dateOfBirth,
+        this?.vaccinations?.map { it.toVaccinationModel() },
+        this?.tests?.map { it.toTestModel() },
+        this?.recoveryStatements?.map { it.toRecoveryModel() },
         verificationResult.isValid(),
         verificationResult.cborDecoded
     )

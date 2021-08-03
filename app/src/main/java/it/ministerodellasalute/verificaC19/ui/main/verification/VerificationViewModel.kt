@@ -116,7 +116,7 @@ class VerificationViewModel @Inject constructor(
             }
 
             _inProgress.value = false
-            _certificate.value = greenCertificate?.toCertificateModel(verificationResult)
+            _certificate.value = greenCertificate.toCertificateModel(verificationResult)
         }
     }
 
