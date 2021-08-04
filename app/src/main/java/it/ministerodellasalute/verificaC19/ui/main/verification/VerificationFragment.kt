@@ -95,11 +95,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "http://www.google.com")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "http://www.google.com")
-            CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_VALID, CertificateStatus.NOT_GREEN_PASS -> mapOf(
-                getString(R.string.label_which_qr_scan) to "http://www.google.com",
-                getString(R.string.label_scan_error_meaning) to "http://www.google.com",
-                getString(R.string.label_scan_times_needed) to "http://www.google.com",
-            )
+            CertificateStatus.TECHNICAL_ERROR -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
+            CertificateStatus.NOT_VALID -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
+            CertificateStatus.NOT_GREEN_PASS -> mapOf(getString(R.string.label_which_qr_scan) to "http://www.google.com")
         }
         questionMap.map {
             val compound = QuestionCompound(context)
@@ -120,8 +118,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         binding.subtitleText.text =
             when (certStatus) {
                 CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> getString(R.string.subtitle_text)
-                CertificateStatus.NOT_VALID -> getString(R.string.subtitle_text_technicalError)
-                CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_future)
+                CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET -> getString(R.string.subtitle_text_notvalid)
                 else -> getString(R.string.subtitle_text_technicalError)
             }
     }
@@ -151,7 +148,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setPersonDetailsVisibility(certStatus: CertificateStatus) {
         binding.containerPersonDetails.visibility = when (certStatus) {
-            CertificateStatus.VALID, CertificateStatus.NOT_VALID_YET, CertificateStatus.PARTIALLY_VALID -> View.VISIBLE
+            CertificateStatus.VALID, CertificateStatus.NOT_VALID, CertificateStatus.NOT_VALID_YET, CertificateStatus.PARTIALLY_VALID -> View.VISIBLE
             else -> View.GONE
         }
     }
