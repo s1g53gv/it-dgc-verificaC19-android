@@ -51,6 +51,10 @@ class CodeReaderFragment : Fragment(), NavController.OnDestinationChangedListene
 
     private val callback: BarcodeCallback = object : BarcodeCallback {
         override fun barcodeResult(result: BarcodeResult) {
+            // Prevent errors from finding patterns of other QR code types inside DCCs
+            if (result.barcodeFormat != BarcodeFormat.QR_CODE && result.barcodeFormat != BarcodeFormat.AZTEC) {
+                return
+            }
             if (result.text == null || result.text == lastText) {
                 // Prevent duplicate scans
                 return
