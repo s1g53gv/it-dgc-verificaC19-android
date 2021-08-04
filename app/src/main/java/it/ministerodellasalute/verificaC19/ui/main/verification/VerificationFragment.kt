@@ -161,8 +161,8 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                 requireContext(),
                 when (certStatus) {
                     CertificateStatus.VALID -> R.color.green
-                    CertificateStatus.PARTIALLY_VALID -> R.color.blue_dark
-                    else -> R.color.red
+                    CertificateStatus.PARTIALLY_VALID -> R.color.blue_bg
+                    else -> R.color.red_bg
                 }
             )
         )
