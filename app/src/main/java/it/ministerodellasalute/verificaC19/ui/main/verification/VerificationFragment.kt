@@ -128,7 +128,9 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             CertificateStatus.VALID -> getString(R.string.certificateValid)
             CertificateStatus.PARTIALLY_VALID -> getString(R.string.certificatePartiallyValid)
             CertificateStatus.NOT_GREEN_PASS -> getString(R.string.certificateNotDCC)
-            else -> getString(R.string.certificateNonValid)
+            CertificateStatus.NOT_VALID -> getString(R.string.certificateNonValid)
+            CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
+            CertificateStatus.TECHNICAL_ERROR -> getString(R.string.certificateTechnicalError)
 
         }
     }
