@@ -201,9 +201,12 @@ class VerificationViewModel @Inject constructor(
     }
 
     private fun checkVaccinations(it: List<VaccinationModel>?): CertificateStatus {
+
+        // Check if vaccine is present in setting list; otherwise, return not valid
         val vaccineEndDayComplete = getVaccineEndDayComplete(it!!.last().medicinalProduct)
         val isValid = vaccineEndDayComplete.isNotEmpty()
         if (!isValid) return CertificateStatus.NOT_VALID
+
         try {
             when {
                 it.last().doseNumber < it.last().totalSeriesOfDoses -> {
@@ -228,7 +231,7 @@ class VerificationViewModel @Inject constructor(
                         else -> CertificateStatus.PARTIALLY_VALID
                     }
                 }
-                it.last().doseNumber == it.last().totalSeriesOfDoses -> {
+                it.last().doseNumber >= it.last().totalSeriesOfDoses -> {
                     val startDate: LocalDate =
                         LocalDate.parse(clearExtraTime(it.last().dateOfVaccination))
                             .plusDays(
@@ -250,15 +253,12 @@ class VerificationViewModel @Inject constructor(
                         else -> CertificateStatus.VALID
                     }
                 }
-                it.last().doseNumber > it.last().totalSeriesOfDoses -> {
-                    return CertificateStatus.NOT_VALID
-                }
                 else -> CertificateStatus.NOT_VALID
             }
         } catch (e: Exception) {
-            return CertificateStatus.NOT_VALID
+            return CertificateStatus.NOT_GREEN_PASS
         }
-        return CertificateStatus.NOT_VALID
+        return CertificateStatus.NOT_GREEN_PASS
     }
 
     private fun checkTests(it: List<TestModel>?): CertificateStatus {
@@ -284,7 +284,7 @@ class VerificationViewModel @Inject constructor(
                 else -> CertificateStatus.VALID
             }
         } catch (e: Exception) {
-            return CertificateStatus.NOT_VALID
+            return CertificateStatus.NOT_GREEN_PASS
         }
     }
 
