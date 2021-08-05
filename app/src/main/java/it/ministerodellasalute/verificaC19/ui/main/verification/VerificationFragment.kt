@@ -93,11 +93,11 @@ class VerificationFragment : Fragment(), View.OnClickListener {
 
     private fun setLinkViews(certStatus: CertificateStatus) {
         val questionMap: Map<String, String> = when (certStatus) {
-            CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "http://www.google.com")
-            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "http://www.google.com")
-            CertificateStatus.TECHNICAL_ERROR -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
-            CertificateStatus.NOT_VALID -> mapOf(getString(R.string.label_why_qr_not_valid) to "http://www.google.com")
-            CertificateStatus.NOT_GREEN_PASS -> mapOf(getString(R.string.label_which_qr_scan) to "http://www.google.com")
+            CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.TECHNICAL_ERROR -> mapOf(getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.NOT_VALID -> mapOf(getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
+            CertificateStatus.NOT_GREEN_PASS -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
         }
         questionMap.map {
             val compound = QuestionCompound(context)
