@@ -95,7 +95,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
         val questionMap: Map<String, String> = when (certStatus) {
             CertificateStatus.VALID, CertificateStatus.PARTIALLY_VALID -> mapOf(getString(R.string.label_what_can_be_done) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_VALID_YET -> mapOf(getString(R.string.label_when_qr_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
-            CertificateStatus.TECHNICAL_ERROR -> mapOf(getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_VALID -> mapOf(getString(R.string.label_why_qr_not_valid) to "https://www.dgc.gov.it/web/faq.html#verifica19")
             CertificateStatus.NOT_GREEN_PASS -> mapOf(getString(R.string.label_which_qr_scan) to "https://www.dgc.gov.it/web/faq.html#verifica19")
         }
@@ -130,8 +129,6 @@ class VerificationFragment : Fragment(), View.OnClickListener {
             CertificateStatus.NOT_GREEN_PASS -> getString(R.string.certificateNotDCC)
             CertificateStatus.NOT_VALID -> getString(R.string.certificateNonValid)
             CertificateStatus.NOT_VALID_YET -> getString(R.string.certificateNonValidYet)
-            CertificateStatus.TECHNICAL_ERROR -> getString(R.string.certificateTechnicalError)
-
         }
     }
 
@@ -142,7 +139,7 @@ class VerificationFragment : Fragment(), View.OnClickListener {
                     CertificateStatus.VALID -> R.drawable.ic_valid_cert
                     CertificateStatus.NOT_VALID_YET -> R.drawable.ic_not_valid_yet
                     CertificateStatus.PARTIALLY_VALID -> R.drawable.ic_locally_valid
-                    CertificateStatus.TECHNICAL_ERROR, CertificateStatus.NOT_GREEN_PASS -> R.drawable.ic_technical_error
+                    CertificateStatus.NOT_GREEN_PASS -> R.drawable.ic_technical_error
                     else -> R.drawable.ic_invalid
                 }
             )
