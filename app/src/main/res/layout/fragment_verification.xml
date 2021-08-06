@@ -50,6 +50,67 @@
             android:fillViewport="true"
             >
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/padding_20dp">
+
+            <ImageButton
+                android:id="@+id/checkmark"
+                android:layout_width="@dimen/size_100dp"
+                android:layout_height="@dimen/size_100dp"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/padding_10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/close_button"
+                tools:background="@drawable/ic_checkmark_filled" />
+
+            <ImageButton
+                android:id="@+id/close_button"
+                android:layout_width="@dimen/size_35dp"
+                android:layout_height="@dimen/size_35dp"
+                android:background="@drawable/circular"
+                android:padding="@dimen/padding_10dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/subtitle_text"
+                style="@style/H3.Black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/certificate_valid"
+                tools:text="@string/subtitle_text" />
+
+            <TextView
+                android:id="@+id/validation_datetime_text"
+                style="@style/H3.Black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subtitle_text"
+                tools:text="@string/validation_datetime_text" />
+
+            <TextView
+                android:id="@+id/certificate_valid"
+                style="@style/H1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:fontFamily="@font/titiliumfont"
+                android:textSize="32sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkmark"
+                tools:text="@string/certificateValid" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/topCon"
                 android:layout_width="match_parent"
@@ -71,6 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:paddingTop="@dimen/padding_16dp">
+
 
                         <ImageButton
                             android:id="@+id/checkmark"
@@ -114,6 +176,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/question_container"
                             tools:text="@string/subtitle_text" />
+                      
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:id="@+id/question_container"
